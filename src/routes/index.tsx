@@ -14,6 +14,8 @@ import {
   Twitter,
   Mail,
   Check,
+  X,
+  Zap,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
@@ -36,6 +38,17 @@ const TICKERS = [
   { sym: "SPY", chg: "+0.21%", up: true },
   { sym: "NVDA", chg: "+3.15%", up: true },
   { sym: "DXY", chg: "-0.18%", up: false },
+];
+
+const EVENT_LINES = [
+  { text: "CPI data at 8:30am", chars: 18, delay: "460ms", tone: "body" },
+  { text: "You lose 68% of trades on CPI days", chars: 36, delay: "880ms", tone: "muted" },
+  { text: "Reduce size this morning", chars: 25, delay: "1280ms", tone: "muted" },
+];
+
+const DATA_LINES = [
+  { text: "NVDA matches your breakout setup", chars: 33, delay: "1760ms", tone: "body" },
+  { text: "Win rate on this pattern: 71%", chars: 30, delay: "2200ms", tone: "body" },
 ];
 
 function Ticker() {
@@ -177,37 +190,159 @@ function Hero() {
 
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex-1" />
-        <div className="mx-auto w-full max-w-7xl px-6 pb-20 sm:pb-28">
-          <div
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-foreground/20 bg-background/40 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-foreground/80 backdrop-blur animate-fade-up"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-foreground/80" />
-            Now in private beta
-          </div>
-          <h1
-            className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-7xl md:text-[5.5rem] text-glow animate-fade-up"
-            style={{ animationDelay: "80ms" }}
-          >
-            Trade Intelligence
-            <br />
-            <span className="text-foreground/60">with Confluence.</span>
-          </h1>
-          <p
-            className="mt-6 max-w-xl text-base text-foreground/75 sm:text-lg animate-fade-up"
-            style={{ animationDelay: "160ms" }}
-          >
-            Confluence sits on top of your workflow, briefs you every morning, and
-            gets smarter every time you trade.
-          </p>
-          <div
-            id="waitlist"
-            className="mt-10 max-w-xl animate-fade-up"
-            style={{ animationDelay: "240ms" }}
-          >
-            <WaitlistForm />
-            <p className="mt-3 text-xs text-foreground/50">
-              Free during beta · Mac &amp; Windows
+        <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 pb-16 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-end lg:gap-12 xl:grid-cols-[minmax(0,1fr)_34rem]">
+          <div>
+            <div
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-foreground/20 bg-background/40 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-foreground/80 backdrop-blur animate-fade-up"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-foreground/80" />
+              Now in private beta
+            </div>
+            <h1
+              className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-7xl md:text-[5.5rem] text-glow animate-fade-up"
+              style={{ animationDelay: "80ms" }}
+            >
+              Trade with
+              <br />
+              <span className="text-foreground">Confluence.</span>
+            </h1>
+            <p
+              className="mt-6 max-w-xl text-base text-foreground/75 sm:text-lg animate-fade-up"
+              style={{ animationDelay: "160ms" }}
+            >
+              Confluence sits on top of your workflow, briefs you every morning, and
+              gets smarter every time you trade.
             </p>
+            <div
+              id="waitlist"
+              className="mt-10 max-w-xl animate-fade-up"
+              style={{ animationDelay: "240ms" }}
+            >
+              <WaitlistForm />
+              <p className="mt-3 text-xs text-foreground/50">
+                Free during beta · Mac &amp; Windows
+              </p>
+            </div>
+          </div>
+
+          <div className="animate-fade-up lg:justify-self-end" style={{ animationDelay: "220ms" }}>
+            <div className="mb-4 flex justify-center lg:justify-start">
+              <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/35 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/70 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.8)] backdrop-blur-md">
+                <span className="flex items-center gap-2 text-white/88">
+                  <span className="grid h-5 w-5 place-items-center rounded-full border border-white/12 bg-white/6 text-[10px]">
+                    C
+                  </span>
+                  Confluence
+                </span>
+                <span className="h-3 w-px bg-white/12" />
+                <span>Hide</span>
+              </div>
+            </div>
+
+            <div className="demo-panel-enter rounded-[1.6rem] border border-white/12 bg-[#0b121d]/58 p-4 shadow-[0_24px_50px_-28px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-xl sm:p-5">
+              <div className="flex items-center justify-between gap-3 border-b border-white/8 pb-3">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-white/84">
+                    <Zap className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <div className="font-medium tracking-tight text-white/92">
+                      Confluence
+                    </div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">
+                      System overlay
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/48">
+                  <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1 text-white/70">
+                    Ctrl+Space
+                  </span>
+                  <button
+                    type="button"
+                    className="grid h-7 w-7 place-items-center rounded-full border border-white/8 bg-white/[0.04] text-white/54"
+                    aria-label="Close overlay preview"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-4 font-mono text-[11px] sm:text-[12px]">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-white/90">MORNING DEBRIEF</span>
+                  <span className="text-white/40">Thu May 8</span>
+                </div>
+
+                <div className="mt-4 border-t border-white/8 pt-4">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <span className="text-white/40">EVENTS</span>
+                    <span className="inline-flex items-center rounded-full bg-rose-500 px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] text-white sm:text-[11px]">
+                      HIGH IMPACT
+                    </span>
+                  </div>
+                  <div className="space-y-2.5 leading-6">
+                    {EVENT_LINES.map((line) => (
+                      <div key={line.text} className="overflow-hidden whitespace-nowrap">
+                        <span
+                          className={`inline-block overflow-hidden whitespace-nowrap align-top typing-line ${
+                            line.tone === "muted" ? "text-white/56" : "text-white/82"
+                          }`}
+                          style={
+                            {
+                              "--chars": line.chars,
+                              "--delay": line.delay,
+                            } as React.CSSProperties
+                          }
+                        >
+                          {line.text}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-4 border-t border-white/8 pt-4">
+                  <div className="mb-3 text-white/40">YOUR DATA</div>
+                  <div className="space-y-2.5 leading-6">
+                    {DATA_LINES.map((line) => (
+                      <div key={line.text} className="overflow-hidden whitespace-nowrap">
+                      <span
+                        className={`inline-block overflow-hidden whitespace-nowrap align-top typing-line ${
+                          line.tone === "muted" ? "text-white/56" : "text-white/82"
+                        }`}
+                        style={
+                          {
+                            "--chars": line.chars,
+                            "--delay": line.delay,
+                          } as React.CSSProperties
+                        }
+                      >
+                        {line.text}
+                      </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-white/8 bg-white/[0.025] px-4 py-3">
+                <span className="font-mono text-[11px] text-white/46 sm:text-[12px]">
+                  Ask anything...
+                </span>
+                <button
+                  type="button"
+                  className="grid h-8 w-8 place-items-center rounded-full border border-emerald-300/20 bg-emerald-300/10 text-emerald-200"
+                  aria-label="Send prompt"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 sm:text-[11px]">
+                Press Ctrl+Space anywhere on your screen
+              </p>
+            </div>
           </div>
         </div>
       </div>
