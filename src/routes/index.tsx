@@ -42,12 +42,12 @@ const TICKERS = [
 
 const EVENT_LINES = [
   { text: "CPI data at 8:30am", chars: 18, delay: "460ms", tone: "body" },
-  { text: "You lose 68% of trades on CPI days", chars: 36, delay: "880ms", tone: "muted" },
+  { text: "You lose 67% of trades on CPI days", chars: 36, delay: "880ms", tone: "muted" },
   { text: "Reduce size this morning", chars: 25, delay: "1280ms", tone: "muted" },
 ];
 
 const DATA_LINES = [
-  { text: "NVDA matches your breakout setup", chars: 33, delay: "1760ms", tone: "body" },
+  { text: "MNQ matches your breakout setup", chars: 33, delay: "1760ms", tone: "body" },
   { text: "Win rate on this pattern: 71%", chars: 30, delay: "2200ms", tone: "body" },
 ];
 
@@ -271,12 +271,16 @@ function Hero() {
               Now in private beta
             </div>
             <h1
-              className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-7xl md:text-[5.5rem] text-glow animate-fade-up"
+              className="max-w-4xl font-semibold leading-[0.98] tracking-tight text-foreground text-glow animate-fade-up"
               style={{ animationDelay: "80ms" }}
             >
-              Trade with
+              <span className="block text-3xl text-foreground/68 sm:text-4xl md:text-5xl">
+                Trade with
+              </span>
               <br />
-              <span className="text-foreground">Confluence.</span>
+              <span className="block text-6xl text-foreground sm:text-8xl md:text-[6.6rem]">
+                Confluence.
+              </span>
             </h1>
             <p
               className="mt-6 max-w-xl text-base text-foreground/75 sm:text-lg animate-fade-up"
@@ -450,10 +454,6 @@ function Hero() {
                         <ArrowRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
-
-                    <p className="mt-3.5 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-white/36 sm:text-[11px]">
-                      Press Ctrl+Space anywhere on your screen
-                    </p>
                   </div>
                 ) : null}
               </div>
@@ -481,7 +481,7 @@ function Problem() {
           You have an edge.
           <br />
           <span className="text-muted-foreground">
-            You just can&apos;t find it when it matters.
+            Find it when it matters.
           </span>
         </h2>
         <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border bg-border md:grid-cols-3">
