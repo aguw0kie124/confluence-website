@@ -364,7 +364,13 @@ function Brokers() {
     { label: "Options", detail: "Single legs and multi-leg structures, fills and Greeks." },
     { label: "Stocks & Equities", detail: "US equities and ETFs across cash and margin accounts." },
   ];
-  const brokers = ["Tradovate", "NinjaTrader", "Webull", "Rithmic", "Interactive Brokers"];
+  const brokers = [
+    { name: "Tradovate", mark: "TV" },
+    { name: "NinjaTrader", mark: "NT" },
+    { name: "Webull", mark: "WB" },
+    { name: "Rithmic", mark: "RI" },
+    { name: "Interactive Brokers", mark: "IB" },
+  ];
   return (
     <section id="brokers" className="relative border-t border-border py-28">
       <div className="mx-auto max-w-7xl px-6">
@@ -401,21 +407,24 @@ function Brokers() {
           ))}
         </div>
 
-        <div className="mt-10 rounded-sm border border-border bg-card/40 p-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-              Supported brokers
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {brokers.map((b) => (
-                <span
-                  key={b}
-                  className="rounded-sm border border-border bg-background px-3 py-1.5 font-mono text-xs tracking-wide text-foreground/85"
-                >
-                  {b}
+        <div className="mt-10">
+          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+            Supported brokers
+          </p>
+          <div className="mt-5 grid gap-px overflow-hidden rounded-sm border border-border bg-border grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+            {brokers.map((b) => (
+              <div
+                key={b.name}
+                className="group flex items-center gap-3 bg-background px-5 py-5 transition-colors hover:bg-card/40"
+              >
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-sm border border-border bg-card/60 font-mono text-xs font-semibold tracking-tight text-foreground/85 transition-colors group-hover:text-foreground">
+                  {b.mark}
+                </div>
+                <span className="text-sm font-medium tracking-tight text-foreground/90">
+                  {b.name}
                 </span>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
