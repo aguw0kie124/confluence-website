@@ -365,11 +365,11 @@ function Brokers() {
     { label: "Stocks & Equities", detail: "US equities and ETFs across cash and margin accounts." },
   ];
   const brokers = [
-    { name: "Tradovate", mark: "TV" },
-    { name: "NinjaTrader", mark: "NT" },
-    { name: "Webull", mark: "WB" },
-    { name: "Rithmic", mark: "RI" },
-    { name: "Interactive Brokers", mark: "IB" },
+    { name: "Tradovate", logo: "/brokers/tradovate.png" },
+    { name: "NinjaTrader", logo: "/brokers/ninjatrader.png" },
+    { name: "Webull", logo: "/brokers/webull.png" },
+    { name: "Rithmic", logo: "/brokers/rithmic.png" },
+    { name: "Interactive Brokers", logo: "/brokers/interactivebrokers.png" },
   ];
   return (
     <section id="brokers" className="relative border-t border-border py-28">
@@ -417,8 +417,15 @@ function Brokers() {
                 key={b.name}
                 className="group flex items-center gap-3 bg-background px-5 py-5 transition-colors hover:bg-card/40"
               >
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-sm border border-border bg-card/60 font-mono text-xs font-semibold tracking-tight text-foreground/85 transition-colors group-hover:text-foreground">
-                  {b.mark}
+                <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-sm border border-border bg-white/95">
+                  <img
+                    src={b.logo}
+                    alt={`${b.name} logo`}
+                    width={32}
+                    height={32}
+                    loading="lazy"
+                    className="h-7 w-7 object-contain"
+                  />
                 </div>
                 <span className="text-sm font-medium tracking-tight text-foreground/90">
                   {b.name}
