@@ -51,7 +51,7 @@ const DATA_LINES = [
   { text: "Win rate on this pattern: 71%", chars: 30, delay: "2200ms", tone: "body" },
 ];
 
-const OVERLAY_DRAG_LIMIT = { x: 38, y: 28 };
+const OVERLAY_DRAG_LIMIT = { left: 132, right: 72, y: 52 };
 
 function Ticker() {
   const items = [...TICKERS, ...TICKERS];
@@ -197,7 +197,7 @@ function Hero() {
 
   function clampOffset(nextX: number, nextY: number) {
     return {
-      x: Math.max(-OVERLAY_DRAG_LIMIT.x, Math.min(OVERLAY_DRAG_LIMIT.x, nextX)),
+      x: Math.max(-OVERLAY_DRAG_LIMIT.left, Math.min(OVERLAY_DRAG_LIMIT.right, nextX)),
       y: Math.max(-OVERLAY_DRAG_LIMIT.y, Math.min(OVERLAY_DRAG_LIMIT.y, nextY)),
     };
   }
@@ -264,12 +264,6 @@ function Hero() {
         <div className="flex-1" />
         <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 pb-16 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-end lg:gap-12 xl:grid-cols-[minmax(0,1fr)_34rem]">
           <div>
-            <div
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-foreground/20 bg-background/40 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-foreground/80 backdrop-blur animate-fade-up"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-foreground/80" />
-              Now in private beta
-            </div>
             <h1
               className="max-w-4xl font-semibold leading-[0.98] tracking-tight text-foreground text-glow animate-fade-up"
               style={{ animationDelay: "80ms" }}
@@ -346,7 +340,7 @@ function Hero() {
                 {overlayOpen ? (
                   <div
                     id="hero-overlay"
-                    className="demo-panel-enter pointer-events-auto rounded-[1.35rem] border border-white/10 bg-[#0b121d]/44 p-3.5 shadow-[0_18px_42px_-30px_rgba(0,0,0,0.92),0_0_0_1px_rgba(255,255,255,0.025)] backdrop-blur-xl sm:p-4"
+                    className="demo-panel-enter pointer-events-auto rounded-[1.35rem] border border-white/9 bg-[#0b121d]/36 p-3.5 shadow-[0_18px_42px_-30px_rgba(0,0,0,0.82),0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-xl sm:p-4"
                   >
                     <div
                       className={`flex items-center justify-between gap-3 border-b border-white/7 pb-2.5 ${
