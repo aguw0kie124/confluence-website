@@ -190,7 +190,7 @@ function Hero() {
           >
             Trade Intelligence
             <br />
-            <span className="text-foreground/60">for serious operators.</span>
+            <span className="text-foreground/60">with Confluence.</span>
           </h1>
           <p
             className="mt-6 max-w-xl text-base text-foreground/75 sm:text-lg animate-fade-up"
@@ -562,6 +562,7 @@ function Index() {
       <Problem />
       <WhatItIs />
       <Features />
+      <Brokers />
       <HowItWorks />
       <Pricing />
       <Footer />
