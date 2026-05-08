@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
+import heroImage from "@/assets/hero-app.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -40,12 +41,12 @@ const TICKERS = [
 function Ticker() {
   const items = [...TICKERS, ...TICKERS];
   return (
-    <div className="overflow-hidden border-y border-border/60 bg-background/60 backdrop-blur">
+    <div className="overflow-hidden border-y border-border/60 bg-background">
       <div className="flex animate-ticker whitespace-nowrap py-3">
         {items.map((t, i) => (
-          <div key={i} className="mx-6 flex items-center gap-2 font-mono text-xs">
+          <div key={i} className="mx-8 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider">
             <span className="text-muted-foreground">{t.sym}</span>
-            <span className={t.up ? "text-primary" : "text-destructive"}>{t.chg}</span>
+            <span className={t.up ? "text-foreground" : "text-muted-foreground/70"}>{t.chg}</span>
           </div>
         ))}
       </div>
@@ -53,71 +54,27 @@ function Ticker() {
   );
 }
 
-function ChartGlyph() {
-  // Decorative SVG line chart
-  return (
-    <svg
-      viewBox="0 0 800 400"
-      className="absolute inset-0 h-full w-full opacity-[0.35]"
-      preserveAspectRatio="none"
-      aria-hidden
-    >
-      <defs>
-        <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.86 0.21 155)" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="oklch(0.86 0.21 155)" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="g2" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.7 0.18 230)" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="oklch(0.7 0.18 230)" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M0 320 L60 290 L120 305 L180 250 L240 260 L300 200 L360 220 L420 160 L480 180 L540 130 L600 150 L660 100 L720 120 L800 70"
-        fill="none"
-        stroke="oklch(0.86 0.21 155)"
-        strokeWidth="2"
-      />
-      <path
-        d="M0 320 L60 290 L120 305 L180 250 L240 260 L300 200 L360 220 L420 160 L480 180 L540 130 L600 150 L660 100 L720 120 L800 70 L800 400 L0 400 Z"
-        fill="url(#g1)"
-      />
-      <path
-        d="M0 360 L80 340 L160 350 L240 310 L320 320 L400 280 L480 290 L560 240 L640 260 L720 210 L800 230"
-        fill="none"
-        stroke="oklch(0.7 0.18 230)"
-        strokeWidth="1.5"
-        strokeDasharray="4 4"
-      />
-      <path
-        d="M0 360 L80 340 L160 350 L240 310 L320 320 L400 280 L480 290 L560 240 L640 260 L720 210 L800 230 L800 400 L0 400 Z"
-        fill="url(#g2)"
-      />
-    </svg>
-  );
-}
-
 function Nav() {
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
+    <header className="fixed top-0 z-50 w-full bg-transparent">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <a href="#top" className="flex items-center gap-2">
-          <div className="grid h-7 w-7 place-items-center rounded-md bg-primary/15 text-primary">
-            <span className="font-mono text-sm font-bold">C</span>
+          <div className="grid h-7 w-7 place-items-center rounded-sm border border-foreground/20 bg-background/60 text-foreground backdrop-blur">
+            <span className="font-mono text-xs font-bold">C</span>
           </div>
-          <span className="font-mono text-sm font-semibold tracking-tight">confluence</span>
+          <span className="text-sm font-semibold tracking-tight text-foreground">Confluence</span>
         </a>
-        <nav className="hidden items-center gap-8 font-mono text-xs text-muted-foreground md:flex">
-          <a href="#problem" className="transition-colors hover:text-foreground">problem</a>
-          <a href="#features" className="transition-colors hover:text-foreground">features</a>
-          <a href="#how" className="transition-colors hover:text-foreground">how it works</a>
-          <a href="#pricing" className="transition-colors hover:text-foreground">pricing</a>
+        <nav className="hidden items-center gap-8 text-sm text-foreground/70 md:flex">
+          <a href="#problem" className="transition-colors hover:text-foreground">Problem</a>
+          <a href="#features" className="transition-colors hover:text-foreground">Features</a>
+          <a href="#how" className="transition-colors hover:text-foreground">How it works</a>
+          <a href="#pricing" className="transition-colors hover:text-foreground">Pricing</a>
         </nav>
         <a
           href="#waitlist"
-          className="rounded-md border border-primary/40 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary transition-colors hover:bg-primary/20"
+          className="rounded-sm bg-foreground px-4 py-2 text-xs font-medium text-background transition-colors hover:bg-foreground/90"
         >
-          Join waitlist
+          Get early access
         </a>
       </div>
     </header>
@@ -160,12 +117,12 @@ function WaitlistForm({ size = "lg" }: { size?: "lg" | "sm" }) {
   if (done) {
     return (
       <div
-        className={`flex items-center gap-3 rounded-xl border border-primary/40 bg-primary/10 ${
+        className={`flex items-center gap-3 rounded-sm border border-border bg-card/60 ${
           big ? "px-5 py-4" : "px-4 py-3"
-        } font-mono text-sm text-primary`}
+        } text-sm text-foreground`}
       >
-        <Check className="h-4 w-4" />
-        <span>You're on the list. Welcome aboard.</span>
+        <Check className="h-4 w-4 text-foreground/80" />
+        <span>You&apos;re on the list. We&apos;ll be in touch.</span>
       </div>
     );
   }
@@ -180,23 +137,22 @@ function WaitlistForm({ size = "lg" }: { size?: "lg" | "sm" }) {
       <input
         type="email"
         required
-        placeholder="you@trader.com"
+        placeholder="Enter your email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         maxLength={255}
-        className={`flex-1 rounded-xl border border-border bg-card/60 ${
+        className={`flex-1 rounded-sm border border-border bg-background/60 backdrop-blur ${
           big ? "px-5 py-4 text-base" : "px-4 py-3 text-sm"
-        } font-mono text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/60 focus:ring-2 focus:ring-primary/20`}
+        } text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-foreground/60`}
       />
       <button
         type="submit"
         disabled={loading}
-        className={`group inline-flex items-center justify-center gap-2 rounded-xl bg-primary ${
+        className={`group inline-flex items-center justify-center gap-2 rounded-sm bg-foreground ${
           big ? "px-6 py-4 text-base" : "px-5 py-3 text-sm"
-        } font-mono font-semibold text-primary-foreground transition-all hover:brightness-110 disabled:opacity-60`}
-        style={{ boxShadow: "var(--shadow-glow)" }}
+        } font-medium text-background transition-all hover:bg-foreground/90 disabled:opacity-60`}
       >
-        {loading ? "Joining…" : "Join the waitlist"}
+        {loading ? "Joining…" : "Get early access"}
         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
       </button>
     </form>
@@ -205,55 +161,54 @@ function WaitlistForm({ size = "lg" }: { size?: "lg" | "sm" }) {
 
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
+    <section id="top" className="relative h-screen min-h-[680px] w-full overflow-hidden">
+      <img
+        src={heroImage}
+        alt="A trader standing before a wall of market terminals"
+        width={1920}
+        height={1080}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
       <div
         className="pointer-events-none absolute inset-0"
         style={{ background: "var(--gradient-hero)" }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2">
-        <ChartGlyph />
-      </div>
+      <div className="pointer-events-none absolute inset-0 bg-background/30" />
 
-      <div className="relative mx-auto max-w-5xl px-6 text-center">
-        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-primary">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-          Now in private beta
-        </div>
-
-        <p className="font-mono text-sm uppercase tracking-[0.3em] text-muted-foreground animate-fade-up">
-          Trade with
-        </p>
-        <h1
-          className="mt-3 text-6xl font-black leading-[0.95] tracking-tight text-foreground sm:text-8xl md:text-[10rem] text-glow animate-fade-up"
-          style={{ animationDelay: "80ms" }}
-        >
-          Confluence<span className="text-primary">.</span>
-        </h1>
-
-        <p
-          className="mx-auto mt-8 max-w-xl text-lg text-muted-foreground sm:text-xl animate-fade-up"
-          style={{ animationDelay: "160ms" }}
-        >
-          Your personal trade intelligence copilot.
-        </p>
-        <p
-          className="mx-auto mt-4 max-w-2xl text-sm text-muted-foreground/80 sm:text-base animate-fade-up"
-          style={{ animationDelay: "220ms" }}
-        >
-          Confluence sits on top of your trading workflow, briefs you every morning,
-          and gets smarter every time you trade.
-        </p>
-
-        <div
-          id="waitlist"
-          className="mx-auto mt-10 max-w-xl animate-fade-up"
-          style={{ animationDelay: "300ms" }}
-        >
-          <WaitlistForm />
-          <p className="mt-3 font-mono text-xs text-muted-foreground">
-            Free during beta · Mac &amp; Windows
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="flex-1" />
+        <div className="mx-auto w-full max-w-7xl px-6 pb-20 sm:pb-28">
+          <div
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-foreground/20 bg-background/40 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-foreground/80 backdrop-blur animate-fade-up"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-foreground/80" />
+            Now in private beta
+          </div>
+          <h1
+            className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-7xl md:text-[5.5rem] text-glow animate-fade-up"
+            style={{ animationDelay: "80ms" }}
+          >
+            Trade Intelligence
+            <br />
+            <span className="text-foreground/60">for serious operators.</span>
+          </h1>
+          <p
+            className="mt-6 max-w-xl text-base text-foreground/75 sm:text-lg animate-fade-up"
+            style={{ animationDelay: "160ms" }}
+          >
+            Confluence sits on top of your workflow, briefs you every morning, and
+            gets smarter every time you trade.
           </p>
+          <div
+            id="waitlist"
+            className="mt-10 max-w-xl animate-fade-up"
+            style={{ animationDelay: "240ms" }}
+          >
+            <WaitlistForm />
+            <p className="mt-3 text-xs text-foreground/50">
+              Free during beta · Mac &amp; Windows
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -267,26 +222,28 @@ function Problem() {
     "ChatGPT doesn't know your edge.",
   ];
   return (
-    <section id="problem" className="relative border-t border-border/40 py-24">
+    <section id="problem" className="relative border-t border-border py-28">
       <div className="mx-auto max-w-6xl px-6">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-          // the gap
+        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+          The gap
         </p>
-        <h2 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">
+        <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
           You have an edge.
           <br />
           <span className="text-muted-foreground">
             You just can&apos;t find it when it matters.
           </span>
         </h2>
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 md:grid-cols-3">
+        <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border bg-border md:grid-cols-3">
           {items.map((line, i) => (
             <div
               key={i}
-              className="bg-card/60 p-8 transition-colors hover:bg-card"
+              className="bg-background p-10 transition-colors hover:bg-card/40"
             >
-              <div className="font-mono text-xs text-primary">0{i + 1}</div>
-              <p className="mt-4 text-lg font-medium leading-snug text-foreground">
+              <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                0{i + 1}
+              </div>
+              <p className="mt-6 text-lg font-medium leading-snug text-foreground">
                 {line}
               </p>
             </div>
@@ -299,16 +256,16 @@ function Problem() {
 
 function WhatItIs() {
   return (
-    <section className="relative border-t border-border/40 py-24">
-      <div className="mx-auto max-w-4xl px-6 text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-          // what it is
+    <section className="relative border-t border-border py-28">
+      <div className="mx-auto max-w-4xl px-6">
+        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+          What it is
         </p>
-        <p className="mt-6 text-2xl leading-relaxed text-foreground sm:text-3xl">
+        <p className="mt-6 text-2xl leading-relaxed text-foreground/80 sm:text-3xl">
           Confluence is a desktop app and system-wide overlay that{" "}
-          <span className="text-primary">knows your trading history</span>,
+          <span className="text-foreground">knows your trading history</span>,
           watches the market, and helps you make better decisions{" "}
-          <span className="text-foreground/60">
+          <span className="text-muted-foreground">
             without replacing any tool you already use.
           </span>
         </p>
@@ -351,14 +308,14 @@ function Features() {
     },
   ];
   return (
-    <section id="features" className="relative border-t border-border/40 py-24">
+    <section id="features" className="relative border-t border-border py-28">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-              // core features
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+              Core features
             </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
               Built for traders who keep records.
             </h2>
           </div>
@@ -368,21 +325,21 @@ function Features() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/60 bg-border/60 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {cards.map((c, i) => (
             <div
               key={i}
-              className="group relative bg-card/60 p-8 transition-colors hover:bg-card"
+              className="group relative bg-background p-8 transition-colors hover:bg-card/40"
             >
               <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-primary transition-all group-hover:bg-primary/20">
-                  <c.icon className="h-5 w-5" />
+                <div className="grid h-10 w-10 place-items-center rounded-sm border border-border bg-card/40 text-foreground/80 transition-colors group-hover:text-foreground">
+                  <c.icon className="h-4 w-4" />
                 </div>
-                <span className="font-mono text-[11px] text-muted-foreground">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
                   0{i + 1}
                 </span>
               </div>
-              <h3 className="mt-6 text-lg font-semibold tracking-tight text-foreground">
+              <h3 className="mt-8 text-lg font-semibold tracking-tight text-foreground">
                 {c.title}
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -415,26 +372,26 @@ function HowItWorks() {
     },
   ];
   return (
-    <section id="how" className="relative border-t border-border/40 py-24">
+    <section id="how" className="relative border-t border-border py-28">
       <div className="mx-auto max-w-7xl px-6">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-          // how it works
+        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+          How it works
         </p>
-        <h2 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
+        <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight sm:text-5xl">
           Three steps. Then it just runs.
         </h2>
 
         <div className="relative mt-16 grid gap-8 md:grid-cols-3">
-          <div className="pointer-events-none absolute inset-x-0 top-12 hidden h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent md:block" />
+          <div className="pointer-events-none absolute inset-x-0 top-12 hidden h-px bg-gradient-to-r from-transparent via-border to-transparent md:block" />
           {steps.map((s) => (
             <div
               key={s.n}
-              className="relative rounded-2xl border border-border/60 bg-card/40 p-8"
+              className="relative rounded-sm border border-border bg-background p-8"
             >
-              <div className="grid h-12 w-12 place-items-center rounded-xl border border-primary/40 bg-background font-mono text-sm font-bold text-primary">
+              <div className="grid h-12 w-12 place-items-center rounded-sm border border-border bg-card font-mono text-sm font-semibold text-foreground">
                 {s.n}
               </div>
-              <h3 className="mt-6 text-xl font-semibold tracking-tight">
+              <h3 className="mt-8 text-xl font-semibold tracking-tight">
                 {s.title}
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -457,13 +414,13 @@ function Pricing() {
     "Mac and Windows",
   ];
   return (
-    <section id="pricing" className="relative border-t border-border/40 py-24">
+    <section id="pricing" className="relative border-t border-border py-28">
       <div className="mx-auto max-w-5xl px-6">
-        <div className="text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-            // pricing
+        <div>
+          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+            Pricing
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">
             Free during beta.
           </h2>
           <p className="mt-4 text-muted-foreground">
@@ -473,50 +430,42 @@ function Pricing() {
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           {/* Free */}
-          <div
-            className="relative overflow-hidden rounded-2xl border border-primary/40 bg-card/60 p-8"
-            style={{ boxShadow: "var(--shadow-glow)" }}
-          >
-            <div
-              className="pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full opacity-30 blur-3xl"
-              style={{ background: "var(--terminal-green)" }}
-            />
+          <div className="relative overflow-hidden rounded-sm border border-foreground/30 bg-card/40 p-8">
             <div className="flex items-center justify-between">
-              <h3 className="font-mono text-sm uppercase tracking-wider text-primary">
+              <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-foreground">
                 Free
               </h3>
-              <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-primary">
+              <span className="rounded-full border border-border bg-background px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-foreground">
                 Available
               </span>
             </div>
-            <p className="mt-4 text-2xl font-semibold tracking-tight">
-              Currently available
+            <p className="mt-6 text-2xl font-semibold tracking-tight">
+              Everything, while we build.
             </p>
             <ul className="mt-8 space-y-3">
               {free.map((f) => (
                 <li
                   key={f}
-                  className="flex items-center gap-3 font-mono text-sm text-foreground/90"
+                  className="flex items-center gap-3 text-sm text-foreground/90"
                 >
-                  <Check className="h-4 w-4 text-primary" />
+                  <Check className="h-4 w-4 text-foreground/70" />
                   {f}
                 </li>
               ))}
             </ul>
             <a
               href="#waitlist"
-              className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-mono text-sm font-semibold text-primary-foreground transition-all hover:brightness-110"
+              className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-sm bg-foreground px-5 py-3 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
             >
-              Join the waitlist
+              Get early access
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>
 
           {/* Pro */}
-          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/30 p-8 opacity-70">
-            <div className="absolute inset-0 bg-grid opacity-30" />
+          <div className="relative overflow-hidden rounded-sm border border-border bg-background p-8">
             <div className="relative flex items-center justify-between">
-              <h3 className="font-mono text-sm uppercase tracking-wider text-muted-foreground">
+              <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Pro
               </h3>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -524,19 +473,19 @@ function Pricing() {
                 Coming Soon
               </span>
             </div>
-            <p className="relative mt-4 text-2xl font-semibold tracking-tight text-muted-foreground">
-              Locked
+            <p className="relative mt-6 text-2xl font-semibold tracking-tight text-muted-foreground">
+              In development.
             </p>
             <div className="relative mt-8 space-y-3">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="h-3 w-full max-w-[80%] rounded bg-muted/40"
+                  className="h-3 w-full max-w-[80%] rounded-sm bg-muted/40"
                   style={{ width: `${80 - i * 10}%` }}
                 />
               ))}
             </div>
-            <p className="relative mt-10 font-mono text-xs text-muted-foreground">
+            <p className="relative mt-10 text-xs text-muted-foreground">
               More powerful features on the way.
             </p>
           </div>
@@ -548,17 +497,17 @@ function Pricing() {
 
 function Footer() {
   return (
-    <footer className="relative border-t border-border/40 py-12">
+    <footer className="relative border-t border-border py-12">
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 sm:flex-row sm:items-center">
         <div className="flex items-center gap-2">
-          <div className="grid h-7 w-7 place-items-center rounded-md bg-primary/15 text-primary">
-            <span className="font-mono text-sm font-bold">C</span>
+          <div className="grid h-7 w-7 place-items-center rounded-sm border border-border bg-card text-foreground">
+            <span className="font-mono text-xs font-bold">C</span>
           </div>
-          <span className="font-mono text-xs text-muted-foreground">
+          <span className="text-xs text-muted-foreground">
             Confluence © 2025
           </span>
         </div>
-        <div className="flex items-center gap-6 font-mono text-xs text-muted-foreground">
+        <div className="flex items-center gap-6 text-xs text-muted-foreground">
           <a
             href="https://twitter.com"
             target="_blank"
