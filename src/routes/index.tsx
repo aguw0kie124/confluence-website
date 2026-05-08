@@ -51,6 +51,8 @@ const DATA_LINES = [
   { text: "Win rate on this pattern: 71%", chars: 30, delay: "2200ms", tone: "body" },
 ];
 
+const OVERLAY_DRAG_LIMIT = { x: 38, y: 28 };
+
 function Ticker() {
   const items = [...TICKERS, ...TICKERS];
   return (
@@ -173,6 +175,76 @@ function WaitlistForm({ size = "lg" }: { size?: "lg" | "sm" }) {
 }
 
 function Hero() {
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [overlayOffset, setOverlayOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragMoved, setDragMoved] = useState(false);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setOverlayOpen(true);
+    }, 320);
+
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  function clampOffset(nextX: number, nextY: number) {
+    return {
+      x: Math.max(-OVERLAY_DRAG_LIMIT.x, Math.min(OVERLAY_DRAG_LIMIT.x, nextX)),
+      y: Math.max(-OVERLAY_DRAG_LIMIT.y, Math.min(OVERLAY_DRAG_LIMIT.y, nextY)),
+    };
+  }
+
+  function handleDragStart(e: React.PointerEvent<HTMLDivElement>) {
+    dragRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      originX: overlayOffset.x,
+      originY: overlayOffset.y,
+    };
+    setIsDragging(true);
+    setDragMoved(false);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }
+
+  function handleDragMove(e: React.PointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+
+    const nextX = drag.originX + (e.clientX - drag.startX);
+    const nextY = drag.originY + (e.clientY - drag.startY);
+    if (!dragMoved && (Math.abs(e.clientX - drag.startX) > 3 || Math.abs(e.clientY - drag.startY) > 3)) {
+      setDragMoved(true);
+    }
+    setOverlayOffset(clampOffset(nextX, nextY));
+  }
+
+  function handleDragEnd(e: React.PointerEvent<HTMLDivElement>) {
+    if (dragRef.current?.pointerId === e.pointerId) {
+      dragRef.current = null;
+      setIsDragging(false);
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    }
+  }
+
+  function toggleOverlay() {
+    setOverlayOpen((open) => !open);
+  }
+
+  function handlePillClick() {
+    if (!dragMoved) toggleOverlay();
+  }
+
   return (
     <section id="top" className="relative h-screen min-h-[680px] w-full overflow-hidden">
       <img
@@ -226,122 +298,165 @@ function Hero() {
           </div>
 
           <div className="animate-fade-up lg:justify-self-end" style={{ animationDelay: "220ms" }}>
-            <div className="mb-4 flex justify-center lg:justify-start">
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/35 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/70 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.8)] backdrop-blur-md">
-                <span className="flex items-center gap-2 text-white/88">
-                  <span className="grid h-5 w-5 place-items-center rounded-full border border-white/12 bg-white/6 text-[10px]">
-                    C
-                  </span>
-                  Confluence
-                </span>
-                <span className="h-3 w-px bg-white/12" />
-                <span>Hide</span>
-              </div>
-            </div>
-
-            <div className="demo-panel-enter rounded-[1.6rem] border border-white/12 bg-[#0b121d]/58 p-4 shadow-[0_24px_50px_-28px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-xl sm:p-5">
-              <div className="flex items-center justify-between gap-3 border-b border-white/8 pb-3">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-white/84">
-                    <Zap className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <div className="font-medium tracking-tight text-white/92">
-                      Confluence
-                    </div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">
-                      System overlay
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/48">
-                  <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1 text-white/70">
-                    Ctrl+Space
-                  </span>
-                  <button
-                    type="button"
-                    className="grid h-7 w-7 place-items-center rounded-full border border-white/8 bg-white/[0.04] text-white/54"
-                    aria-label="Close overlay preview"
+            <div className="relative mx-auto w-full max-w-[30rem] min-h-[23rem] lg:mx-0">
+              <div
+                className="relative min-h-[19rem]"
+                style={{
+                  transform: `translate(${overlayOffset.x}px, ${overlayOffset.y}px)`,
+                  transition: isDragging ? "none" : "transform 220ms ease-out",
+                }}
+              >
+                <div className="mb-3 flex justify-center lg:justify-start">
+                  <div
+                    className={`pointer-events-auto inline-flex items-center gap-3 rounded-full border border-white/10 bg-black/26 px-3.5 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/68 shadow-[0_10px_24px_-18px_rgba(0,0,0,0.75)] backdrop-blur-md ${
+                      isDragging ? "cursor-grabbing" : "cursor-grab"
+                    }`}
+                    onPointerDown={handleDragStart}
+                    onPointerMove={handleDragMove}
+                    onPointerUp={handleDragEnd}
+                    onPointerCancel={handleDragEnd}
+                    onClick={handlePillClick}
+                    style={{ touchAction: "none" }}
                   >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="pt-4 font-mono text-[11px] sm:text-[12px]">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-white/90">MORNING DEBRIEF</span>
-                  <span className="text-white/40">Thu May 8</span>
-                </div>
-
-                <div className="mt-4 border-t border-white/8 pt-4">
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <span className="text-white/40">EVENTS</span>
-                    <span className="inline-flex items-center rounded-full bg-rose-500 px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] text-white sm:text-[11px]">
-                      HIGH IMPACT
-                    </span>
-                  </div>
-                  <div className="space-y-2.5 leading-6">
-                    {EVENT_LINES.map((line) => (
-                      <div key={line.text} className="overflow-hidden whitespace-nowrap">
-                        <span
-                          className={`inline-block overflow-hidden whitespace-nowrap align-top typing-line ${
-                            line.tone === "muted" ? "text-white/56" : "text-white/82"
-                          }`}
-                          style={
-                            {
-                              "--chars": line.chars,
-                              "--delay": line.delay,
-                            } as React.CSSProperties
-                          }
-                        >
-                          {line.text}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-4 border-t border-white/8 pt-4">
-                  <div className="mb-3 text-white/40">YOUR DATA</div>
-                  <div className="space-y-2.5 leading-6">
-                    {DATA_LINES.map((line) => (
-                      <div key={line.text} className="overflow-hidden whitespace-nowrap">
-                      <span
-                        className={`inline-block overflow-hidden whitespace-nowrap align-top typing-line ${
-                          line.tone === "muted" ? "text-white/56" : "text-white/82"
-                        }`}
-                        style={
-                          {
-                            "--chars": line.chars,
-                            "--delay": line.delay,
-                          } as React.CSSProperties
-                        }
-                      >
-                        {line.text}
+                    <span className="flex items-center gap-2 text-white/86">
+                      <span className="grid h-5 w-5 place-items-center rounded-full border border-white/12 bg-white/6 text-[10px]">
+                        C
                       </span>
-                      </div>
-                    ))}
+                      Confluence
+                    </span>
+                    <span className="h-3 w-px bg-white/12" />
+                    <button
+                      type="button"
+                      onClick={toggleOverlay}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClickCapture={(e) => e.stopPropagation()}
+                      className="rounded-full border border-white/8 bg-white/[0.04] px-2.5 py-1 text-white/72 transition-colors hover:bg-white/[0.08]"
+                      aria-expanded={overlayOpen}
+                      aria-controls="hero-overlay"
+                    >
+                      {overlayOpen ? "Hide" : "Open"}
+                    </button>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-white/8 bg-white/[0.025] px-4 py-3">
-                <span className="font-mono text-[11px] text-white/46 sm:text-[12px]">
-                  Ask anything...
-                </span>
-                <button
-                  type="button"
-                  className="grid h-8 w-8 place-items-center rounded-full border border-emerald-300/20 bg-emerald-300/10 text-emerald-200"
-                  aria-label="Send prompt"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
+                {overlayOpen ? (
+                  <div
+                    id="hero-overlay"
+                    className="demo-panel-enter pointer-events-auto rounded-[1.35rem] border border-white/10 bg-[#0b121d]/44 p-3.5 shadow-[0_18px_42px_-30px_rgba(0,0,0,0.92),0_0_0_1px_rgba(255,255,255,0.025)] backdrop-blur-xl sm:p-4"
+                  >
+                    <div
+                      className={`flex items-center justify-between gap-3 border-b border-white/7 pb-2.5 ${
+                        isDragging ? "cursor-grabbing" : "cursor-grab"
+                      }`}
+                      onPointerDown={handleDragStart}
+                      onPointerMove={handleDragMove}
+                      onPointerUp={handleDragEnd}
+                      onPointerCancel={handleDragEnd}
+                      style={{ touchAction: "none" }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="grid h-7 w-7 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white/84">
+                          <Zap className="h-3.5 w-3.5" />
+                        </div>
+                        <div>
+                          <div className="font-medium tracking-tight text-white/92">
+                            Confluence
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/48">
+                        <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-1 text-white/70">
+                          Ctrl+Space
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setOverlayOpen(false)}
+                          onPointerDown={(e) => e.stopPropagation()}
+                          className="grid h-7 w-7 place-items-center rounded-full border border-white/8 bg-white/[0.04] text-white/54 transition-colors hover:bg-white/[0.08]"
+                          aria-label="Close overlay preview"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
 
-              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 sm:text-[11px]">
-                Press Ctrl+Space anywhere on your screen
-              </p>
+                    <div className="pt-3 font-mono text-[11px] sm:text-[12px]">
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-white/90">MORNING DEBRIEF</span>
+                        <span className="text-white/40">Thu May 8</span>
+                      </div>
+
+                      <div className="mt-3 border-t border-white/7 pt-3">
+                        <div className="mb-2.5 flex items-center justify-between gap-3">
+                          <span className="text-white/40">EVENTS</span>
+                          <span className="inline-flex items-center rounded-full bg-rose-500/92 px-2.5 py-1 text-[10px] font-semibold tracking-[0.18em] text-white sm:text-[11px]">
+                            HIGH IMPACT
+                          </span>
+                        </div>
+                        <div className="space-y-2 leading-[1.35rem]">
+                          {EVENT_LINES.map((line) => (
+                            <div key={line.text} className="overflow-hidden whitespace-nowrap">
+                              <span
+                                className={`inline-block overflow-hidden whitespace-nowrap align-top typing-line ${
+                                  line.tone === "muted" ? "text-white/56" : "text-white/82"
+                                }`}
+                                style={
+                                  {
+                                    "--chars": line.chars,
+                                    "--delay": line.delay,
+                                  } as React.CSSProperties
+                                }
+                              >
+                                {line.text}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-3 border-t border-white/7 pt-3">
+                        <div className="mb-2.5 text-white/40">YOUR DATA</div>
+                        <div className="space-y-2 leading-[1.35rem]">
+                          {DATA_LINES.map((line) => (
+                            <div key={line.text} className="overflow-hidden whitespace-nowrap">
+                              <span
+                                className={`inline-block overflow-hidden whitespace-nowrap align-top typing-line ${
+                                  line.tone === "muted" ? "text-white/56" : "text-white/82"
+                                }`}
+                                style={
+                                  {
+                                    "--chars": line.chars,
+                                    "--delay": line.delay,
+                                  } as React.CSSProperties
+                                }
+                              >
+                                {line.text}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between gap-3 rounded-[1rem] border border-white/7 bg-white/[0.02] px-3.5 py-2.5">
+                      <span className="font-mono text-[11px] text-white/46 sm:text-[12px]">
+                        Ask anything...
+                      </span>
+                      <button
+                        type="button"
+                        className="grid h-7 w-7 place-items-center rounded-full border border-white/10 bg-white/[0.05] text-white/80"
+                        aria-label="Send prompt"
+                      >
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+
+                    <p className="mt-3.5 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-white/36 sm:text-[11px]">
+                      Press Ctrl+Space anywhere on your screen
+                    </p>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
