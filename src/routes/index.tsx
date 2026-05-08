@@ -190,7 +190,7 @@ function Hero() {
           >
             Trade Intelligence
             <br />
-            <span className="text-foreground/60">for serious operators.</span>
+            <span className="text-foreground/60">with Confluence.</span>
           </h1>
           <p
             className="mt-6 max-w-xl text-base text-foreground/75 sm:text-lg animate-fade-up"
@@ -354,6 +354,76 @@ function Features() {
 }
 
 function HowItWorks() {
+  return _HowItWorks();
+}
+
+function Brokers() {
+  const assets = [
+    { label: "Futures", detail: "ES, NQ, CL, GC and the rest of the CME complex." },
+    { label: "Forex", detail: "Majors, minors, and exotics across your FX broker." },
+    { label: "Options", detail: "Single legs and multi-leg structures, fills and Greeks." },
+    { label: "Stocks & Equities", detail: "US equities and ETFs across cash and margin accounts." },
+  ];
+  const brokers = ["Tradovate", "NinjaTrader", "Webull", "Rithmic", "Interactive Brokers"];
+  return (
+    <section id="brokers" className="relative border-t border-border py-28">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+              Auto trade logging
+            </p>
+            <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight sm:text-5xl">
+              Connect your broker.
+              <br />
+              <span className="text-muted-foreground">Every fill logs itself.</span>
+            </h2>
+          </div>
+          <p className="max-w-md text-muted-foreground">
+            Confluence ingests fills directly from your broker and normalizes them
+            into a single trade journal — no spreadsheets, no manual entry.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-px overflow-hidden rounded-sm border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
+          {assets.map((a, i) => (
+            <div key={a.label} className="bg-background p-8">
+              <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                0{i + 1}
+              </div>
+              <h3 className="mt-6 text-lg font-semibold tracking-tight text-foreground">
+                {a.label}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {a.detail}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 rounded-sm border border-border bg-card/40 p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+              Supported brokers
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {brokers.map((b) => (
+                <span
+                  key={b}
+                  className="rounded-sm border border-border bg-background px-3 py-1.5 font-mono text-xs tracking-wide text-foreground/85"
+                >
+                  {b}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function _HowItWorks() {
   const steps = [
     {
       n: "01",
@@ -562,6 +632,7 @@ function Index() {
       <Problem />
       <WhatItIs />
       <Features />
+      <Brokers />
       <HowItWorks />
       <Pricing />
       <Footer />
